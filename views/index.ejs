@@ -8,16 +8,17 @@
 <div id="photos-wrapper">
 	<h1>A node.js voting game - is it electric?</h1>
 	<div id="photo">
-		<img src="images/peel.jpg">
+		<img src="/images/<%=carimage%>">
 	</div>
 
 	<div id="button-holder">
 		<form class="vote-button" action="electric" method="post">
-			<input type="text" name="car">
+			<input type="hidden" name="photo" value="<%=carimage%>">
 			<input type="submit" name="submit" class="btn btn-info" value="Electric!">
 		</form>
 
-		<form class="vote-button" action="./poser" method="post">
+		<form class="vote-button" action="poser" method="post">
+			<input type="hidden" name="photo" value="peel">
 			<input type="submit" class="btn btn-info" Value="Poser">
 		</form>
 
