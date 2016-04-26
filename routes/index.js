@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
-var mongoUrl = process.env.MONGOLAB_URI || 
-				process.env.MONGOHQ_URL || 
-				'mongodb://localhost:27017/electricOrNot';
+ var mongoUrl =
+    process.env.process.env.MONGODB_URI ||
+    process.env.process.env.MONGOHQ_URL ||
+    'mongodb://localhost:27017/electric';
 
 var db;
 //Create a connection to the db, and assign to the global db var
