@@ -13,25 +13,23 @@ MongoClient.connect(mongoUrl, function(error, database){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
-	//get the users IP
 	var currIP = req.ip;
-  
 	db.collection('users').find({ip:currIP}).toArray(function(error, userResult){
-
 		var photosVoted = [];
-		console.log(userResult);
-
-		console.log('=====================');
-
 		for(i=0; i<userResult.length; i++){
 			photosVoted.push(userResult[i].image);
 		}
 
 		db.collection('cars').find({imageSrc: {$nin: photosVoted}}).toArray(function(error, photosToShow){
-			console.log(photosToShow);
-			var randomNum = Math.floor(Math.random() * photosToShow.length);
-		  	res.render('index', { carimage: photosToShow[randomNum].imageSrc });
+			if(photosToShow.length == 0){
+				//this means the user has voted on every image we have available. Send them to the standings page.
+				res.redirect('/standings');
+			}else{
+				//There are still photos to vote on. So server one up.
+				var randomNum = Math.floor(Math.random() * photosToShow.length);
+			  	res.render('index', { carimage: photosToShow[randomNum].imageSrc });
+			}
+
 		});
 	});
 });
