@@ -17,31 +17,35 @@ MongoClient.connect(mongoUrl, function(error, database){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  // 1. Get all pictures from MongoClient
-  	// We did this when we connected.
 
-  // 2. Get the current user from mongo
   var currIP = req.ip;
   console.log("The current user's IP address is: " + currIP);
 	db.collection('users').find({ip:currIP}).toArray(function(error, userResult){
 		// IF the user result returns nothing, then the user hasn't voted on anything.
 		if(userResult.length == 0){
-			// 4. Load all those documents into an array
 			photosToShow = allPhotos;
 		}else{
-			// 4. Only load the photos the user hasn't voted on.
 			// res.send('You voted on something!!!!');
 			photosToShow = allPhotos;
 		}
-		// 5. Pick a random one
 		var randomNum = Math.floor(Math.random() * photosToShow.length);
-		// 6. Send the random one to the view (index.ejs)
 	  	res.render('index', { carimage: allPhotos[randomNum].imageSrc });
+	});
+});
 
+router.get('/standings', function(req, res, next){
+
+	db.collection('cars').find().toArray(function(error, result){
+		standingsArray = [];
+		for(i=0; i<result.length; i++){
+			standingsArray.push(result[i]);
+		}
+		standingsArray.sort(function(a,b){
+			return (b.totalVotes - a.totalVotes);
+		})
+		res.render('standings', {theStandings: standingsArray});
 	});
 
-  // 3. Find out which pictures the current user has NOT voted on
-  // 6B. If, the user has voted on every image in the DB, notify them
 });
 
 /* Set up the post electric page. */
@@ -86,14 +90,35 @@ router.post('/electric', function(req, res, next){
 /* Set up the post electric page. */
 router.post('/poser', function(req, res, next){
 	// res.send(req.body);
-	res.send("The user chose " + req.body.photo + " as a poser picture.");
+	// res.send("The user chose " + req.body.photo + " as a poser picture.");
   // 1. We know they voted electric, or they wouldn't be here.
   // 2. We know what they voted on, because we passed it in the req.body var
   // 3. We know who they are, because we know their ip.
   // 4. Update the users collection to include: user ip and photo they voted on
+	db.collection('users').insertOne({
+		ip: req.ip,
+		vote: 'poser',
+		image: req.body.photo
+	});  
   // 5. Update the images/cars collection by -1	
   // 6. 
-	// res.send(req.query.submit);
+  	db.collection('cars').find({imageSrc:req.body.photo}).toArray(function(error, result){
+  		if(isNaN(result[0].totalVotes)){
+  			total = 0;
+  		}else{
+  			total = result[0].totalVotes;
+  		}
+		db.collection('cars').updateOne(
+			{ imageSrc: req.body.photo },
+			{
+				$set: {"totalVotes": (total - 1)}
+			}, function(error, results){
+				// console.log(results);
+				// console.log(newTotal);
+			}
+		);
+  	});  
+	res.redirect('/');
 });
 
 
