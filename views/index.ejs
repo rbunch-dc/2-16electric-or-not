@@ -12,15 +12,18 @@
 	</div>
 
 	<div id="button-holder">
-		<form class="vote-button" action="electric" method="post">
-			<input type="hidden" name="photo" value="<%=carimage%>">
-			<input type="submit" name="submit" class="btn btn-info" value="Electric!">
-		</form>
-
-		<form class="vote-button" action="poser" method="post">
-			<input type="hidden" name="photo" value="<%=carimage%>">
-			<input type="submit" class="btn btn-info" Value="Poser">
-		</form>
+		<div class="button-form">
+			<form class="vote-button" action="electric" method="post">
+				<input type="hidden" name="photo" value="<%=carimage%>">
+				<input type="submit" name="submit" class="btn btn-info" value="Electric!">
+			</form>
+		</div>
+		<div class="button-form">
+			<form class="vote-button" action="poser" method="post">
+				<input type="hidden" name="photo" value="<%=carimage%>">
+				<input type="submit" class="btn btn-info" Value="Poser">
+			</form>
+		</div>
 
 	</div>
 

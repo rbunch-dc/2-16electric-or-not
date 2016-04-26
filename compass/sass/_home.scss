@@ -1,3 +1,33 @@
 body{
-	background-color: black;
+	img{
+		max-width: 100%;
+	}
+}
+#photos-wrapper{
+	margin-top: 50px;
+}
+
+#photo{
+	max-width: 600px;
+	margin: auto;
+}
+
+#button-holder{
+	width: 220px;
+	margin: auto;
+	margin-top: 20px;
+	overflow: hidden;
+	input{
+		width: 100px;
+		margin-left: 10px;
+	}
+}
+
+.button-form{
+	float: left;
+}
+
+.footer{
+	clear: both;
+	margin-top: 10px;
 }

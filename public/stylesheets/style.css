@@ -1,9 +1,44 @@
-/* line 1, ../../compass/sass/_home.scss */
-body {
-  background-color: black;
+/* line 2, ../../compass/sass/_home.scss */
+body img {
+  max-width: 100%;
 }
 
-/* line 1, ../../compass/sass/nav.scss */
+/* line 6, ../../compass/sass/_home.scss */
+#photos-wrapper {
+  margin-top: 50px;
+}
+
+/* line 10, ../../compass/sass/_home.scss */
+#photo {
+  max-width: 600px;
+  margin: auto;
+}
+
+/* line 15, ../../compass/sass/_home.scss */
+#button-holder {
+  width: 220px;
+  margin: auto;
+  margin-top: 20px;
+  overflow: hidden;
+}
+/* line 20, ../../compass/sass/_home.scss */
+#button-holder input {
+  width: 100px;
+  margin-left: 10px;
+}
+
+/* line 26, ../../compass/sass/_home.scss */
+.button-form {
+  float: left;
+}
+
+/* line 30, ../../compass/sass/_home.scss */
+.footer {
+  clear: both;
+  margin-top: 10px;
+}
+
+/* line 1, ../../compass/sass/_nav.scss */
 body {
   color: green;
 }
