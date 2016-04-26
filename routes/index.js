@@ -6,30 +6,33 @@ var mongoUrl = process.env.MONGOLAB_URI ||
 				'mongodb://localhost:27017/electricOrNot';
 
 var db;
-var allPhotos;
-
+//Create a connection to the db, and assign to the global db var
 MongoClient.connect(mongoUrl, function(error, database){
-	database.collection('cars').find().toArray(function(error, result){
-		allPhotos = result;
-		db = database;
-	});
+	db = database;
 });
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-  var currIP = req.ip;
-  console.log("The current user's IP address is: " + currIP);
+	//get the users IP
+	var currIP = req.ip;
+  
 	db.collection('users').find({ip:currIP}).toArray(function(error, userResult){
-		// IF the user result returns nothing, then the user hasn't voted on anything.
-		if(userResult.length == 0){
-			photosToShow = allPhotos;
-		}else{
-			// res.send('You voted on something!!!!');
-			photosToShow = allPhotos;
+
+		var photosVoted = [];
+		console.log(userResult);
+
+		console.log('=====================');
+
+		for(i=0; i<userResult.length; i++){
+			photosVoted.push(userResult[i].image);
 		}
-		var randomNum = Math.floor(Math.random() * photosToShow.length);
-	  	res.render('index', { carimage: allPhotos[randomNum].imageSrc });
+
+		db.collection('cars').find({imageSrc: {$nin: photosVoted}}).toArray(function(error, photosToShow){
+			console.log(photosToShow);
+			var randomNum = Math.floor(Math.random() * photosToShow.length);
+		  	res.render('index', { carimage: photosToShow[randomNum].imageSrc });
+		});
 	});
 });
 
