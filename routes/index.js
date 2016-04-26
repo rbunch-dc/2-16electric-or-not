@@ -28,6 +28,10 @@ router.get('/', function(req, res, next) {
 		if(userResult.length == 0){
 			// 4. Load all those documents into an array
 			photosToShow = allPhotos;
+		}else{
+			// 4. Only load the photos the user hasn't voted on.
+			// res.send('You voted on something!!!!');
+			photosToShow = allPhotos;
 		}
 		// 5. Pick a random one
 		var randomNum = Math.floor(Math.random() * photosToShow.length);
@@ -40,33 +44,43 @@ router.get('/', function(req, res, next) {
   // 6B. If, the user has voted on every image in the DB, notify them
 });
 
-/* GET home page. */
-router.get('/electric', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-
 /* Set up the post electric page. */
 router.post('/electric', function(req, res, next){
-	// res.send(req.body.photo);
+	// 1. We know they voted electric, or they wouldn't be here.
+	// 2. We know what they voted on, because we passed it in the req.body var
+  	// 3. We know who they are, because we know their ip.
 
-	db.collection('cars').updateOne(
-		{ imageSrc: req.body.photo },
-		{
-			$set: {"totalVotes": 2}
-		}, function(error, results){
-			console.log(results);
-		}
-	)
+	// 4. Update the users collection to include: user ip and photo they voted one
+	db.collection('users').insertOne({
+		ip: req.ip,
+		vote: 'electric',
+		image: req.body.photo
+	});
 
-	res.send("The user chose " + req.body.photo + " as an electric picture.");
-  // 1. We know they voted electric, or they wouldn't be here.
-  // 2. We know what they voted on, because we passed it in the req.body var
-  // 3. We know who they are, because we know their ip.
-  // 4. Update the users collection to include: user ip and photo they voted on
-  // 5. Update the images/cars collection by 1
-  // 6. Send them back to the main page so they can vote again (OR render a page)
-	// res.send(req.query.submit);
+  	// 5. Update the images/cars collection "totalVotes" for this particular car, by 1 (because they chose electric)
+  	db.collection('cars').find({imageSrc:req.body.photo}).toArray(function(error, result){
+  		if(isNaN(result[0].totalVotes)){
+  			total = 0;
+  		}else{
+  			total = result[0].totalVotes;
+  		}
+		db.collection('cars').updateOne(
+			{ imageSrc: req.body.photo },
+			{
+				$set: {"totalVotes": (total + 1)}
+			}, function(error, results){
+				// console.log(results);
+				// console.log(newTotal);
+			}
+		);
+  	});
+  	// 6. Send them back to the main page so they can vote again (OR render a page)
+  	// Instead of simply sending the user back to the home page, you could
+  	// res.render an ejs file, that has a picture of that car
+  	// with the total votes
+
+	res.redirect('/');
+  
 });
 
 /* Set up the post electric page. */

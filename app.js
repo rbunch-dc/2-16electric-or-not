@@ -8,7 +8,8 @@
 // 3. Copy the compass boilerplate into the project.
 // -- this will give you access to compass. We need to change teh rb config file to write to teh correct place.
 // -- -- This means changing the path of the css write directory to ../public/stylesheets
-// 4. Init git the repo
+// -- -- Set up includes for head, nav, footer so we could make use of multiple stylesheets
+// 4. Initialize git (the repo) or start it up in GitHub Desktop
 // -- from the command line:
 // -- -- git init
 // -- -- git add * (this will add ALL files in teh directory to be commited)
@@ -22,15 +23,15 @@
 // 8. SANITY CHECK. RUN NODEMON.
 // 9. Switch the templating engine (if desired) from Jade.
 // -- in app.js (where we are at) go down to the app.set and change it from jade, to ejs.
-// -- in the views folder, change .jade files to .ejs files.
-// 10. In index.ejs, set up our common files and include themselves
+// -- in the views folder, change .jade files to .ejs files. (this involves a little syntax change in the error.jade file)
+// 10. In index.ejs, set up our common files and include them
 // - head
 // - nav
 // - footer
 // 11. Set up a wrapper div to hold our voting buttons and our image
 // 12. Style the home page
 // 13. Set up an test the connection to Mongo.
-
+// 14. Jumpt down to home page route for next steps.
 
 var express = require('express');
 var path = require('path');
@@ -40,7 +41,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -57,7 +57,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
